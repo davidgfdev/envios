@@ -5,6 +5,6 @@ import java.util.List;
 import com.sinensia.railes.model.Envio;
 
 public interface EnviosService {
-    void altaEnvio(String nombreEstacion, String destino, double peso);
+    void altaEnvio(int idEnvio, String nombreEstacion, String destino, double peso);
     List<Envio> envios();
 }

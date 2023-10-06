@@ -36,9 +36,9 @@ public class EnviosServiceImpl implements EnviosService{
      * @param peso
      */
     @Override
-    public void altaEnvio(String nombreEstacion, String destino, double peso) {   
+    public void altaEnvio(int idEnvio, String nombreEstacion, String destino, double peso) {   
         Envio envio = new Envio(
-            generarId(), 
+            idEnvio, 
             obtenerIdEstacion(nombreEstacion), 
             obtenerEstacionMasCercana(destino), 
             escogerTrenApropiado(peso), 
@@ -115,23 +115,5 @@ public class EnviosServiceImpl implements EnviosService{
         }
 
         return -1;
-    }
-
-    /**
-     * Genera un ID para el nuevo envío.
-     * 
-     * @return ID
-     */
-    private int generarId(){
-        List<Envio> envios = enviosDao.findAll();
-        int nuevaId = envios.size() + 1;
-
-        for (Envio envio : envios){
-            if (nuevaId == envio.getIdEnvio()){
-                nuevaId++;
-            }
-        }
-
-        return nuevaId;
     }
 }
