@@ -3,6 +3,8 @@ package com.sinensia.railes.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +18,8 @@ public class EnviosController {
     
     @Autowired
     EnviosService enviosService;
+
+    private static final String JSON_MEDIA_TYPE = MediaType.APPLICATION_JSON_VALUE;
 
     /**
      * Da de alta en BD un envío nuevo.
@@ -40,8 +44,19 @@ public class EnviosController {
      * 
      * @return listaEnvios
      */
-    @GetMapping(value = "envios")
+    @GetMapping(value = "envios", produces = JSON_MEDIA_TYPE)
     public List<Envio> envios(){
         return enviosService.envios();
+    }
+
+    /**
+     * Elimina un envío.
+     * 
+     * @param idEnvio
+     * @return listaEnvios
+     */
+    @DeleteMapping(value = "envio/{idEnvio}", produces = JSON_MEDIA_TYPE)
+    public List<Envio> eliminarEnvio(@PathVariable int idEnvio){
+        return enviosService.deleteEnvio(idEnvio);
     }
 }

@@ -103,6 +103,6 @@ public class Envio {
         if (idEnvio == -1)  return false; 
         if (idEstacionInicial == -1)  return false; 
         if (idEstacionDestino == -1)  return false; 
-        return (idTren == -1); 
+        return (idTren != -1); 
     }
 }

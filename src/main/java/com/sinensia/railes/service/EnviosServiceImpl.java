@@ -59,6 +59,17 @@ public class EnviosServiceImpl implements EnviosService{
     }
 
     /**
+     * Elimina un envío, si lo encuentra.
+     * 
+     * @param idEnvio
+     */
+    @Override
+    public List<Envio> deleteEnvio(int idEnvio){
+        enviosDao.deleteById(idEnvio);
+        return enviosDao.findAll();
+    }
+
+    /**
      * Escoge un tren con vagones suficientes para soportar el peso.
      * 
      * @param peso

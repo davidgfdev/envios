@@ -7,4 +7,5 @@ import com.sinensia.railes.model.Envio;
 public interface EnviosService {
     void altaEnvio(int idEnvio, String nombreEstacion, String destino, double peso);
     List<Envio> envios();
+    List<Envio> deleteEnvio(int idEnvio);
 }
