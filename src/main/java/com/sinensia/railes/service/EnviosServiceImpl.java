@@ -25,6 +25,7 @@ public class EnviosServiceImpl implements EnviosService{
 
     private static final String URL_ESTACIONES = "http://localhost:8080/";
     private static final String URL_TRENES = "http://localhost:9000/";
+    private static final int VAGONES_TOLERANCIA = 10;
 
     /**
      * Da de alta un nuevo envío. Este nuevo envío escojerá un tren y estación adecuados basándose en lo siguiente:
@@ -76,17 +77,37 @@ public class EnviosServiceImpl implements EnviosService{
      * @return idTren
      */
     private int escogerTrenApropiado(Double peso){
+
+        // Calcula los vagones necesarios para el peso. 1 vagón puede llevar 100kg.
         int vagonesNecesarios = (int) Math.ceil(peso/100);
-        List<TrenDTO> listaTrenes = Arrays.asList(restTemplate.getForObject(
-            URL_TRENES + "/trenes/" + (vagonesNecesarios) + "/" + (vagonesNecesarios + 10), 
-            TrenDTO[].class));
 
-        if (!listaTrenes.isEmpty()){
-            listaTrenes = listaTrenes.stream()
+        // Obtiene una lista de trenes que tengan ese vagón y 10 más como tolerancia.
+        List<TrenDTO> listaTrenesConVagones = Arrays.asList(restTemplate.getForObject(
+            URL_TRENES + "trenes/" + (vagonesNecesarios) + "/" + (vagonesNecesarios + VAGONES_TOLERANCIA), 
+            TrenDTO[].class)
+        );
+
+        // Si le llegan trenes entre esos vagones, utilizará el primer tren que encuentre.
+        if (!listaTrenesConVagones.isEmpty()){
+            return listaTrenesConVagones.stream()
                 .sorted((tren1, tren2) -> tren1.getVagones() - tren2.getVagones())
-                .toList();
+                .toList()
+                .get(0)
+                .getIdTren();
+        } else {
 
-            return listaTrenes.get(0).getIdTren();
+            // Si no hay trenes entre esos vagones, 
+            // modificará el primer tren disponible añadiendole vagones.
+            List<TrenDTO> listaTrenes = Arrays.asList(restTemplate.getForObject(
+                URL_TRENES + "trenes",
+                TrenDTO[].class)
+            );
+
+            if (!listaTrenes.isEmpty()){
+                int trenModificable = listaTrenes.get(0).getIdTren();
+                restTemplate.put(URL_TRENES + "tren/" + trenModificable + "/" + vagonesNecesarios, null);
+                return trenModificable;
+            }
         }
 
         return -1;
