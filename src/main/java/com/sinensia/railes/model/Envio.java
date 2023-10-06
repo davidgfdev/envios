@@ -98,4 +98,11 @@ public class Envio {
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
+
+    public boolean isValid(){
+        if (idEnvio == -1)  return false; 
+        if (idEstacionInicial == -1)  return false; 
+        if (idEstacionDestino == -1)  return false; 
+        return (idTren == -1); 
+    }
 }
